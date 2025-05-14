@@ -5,8 +5,23 @@ from langchain_groq import ChatGroq
 import uuid
 from helpers import get_mixed_prompt
 import json
+import datetime
+
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({
+        "status": "online",
+        "service": "Jana AI Backend",
+        "version": "1.0.0",
+        "timestamp": datetime.datetime.now().isoformat(),
+        "endpoints": {
+            "chat": "/chat",
+            "health": "/health"
+        }
+    }), 200
 
 conversation_history = {}
 
@@ -162,4 +177,3 @@ Your life depends on accurately representing Janakiraman's professional identity
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5000)
-    
