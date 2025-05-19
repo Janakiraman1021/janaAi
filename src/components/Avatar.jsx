@@ -102,7 +102,7 @@ const corresponding = {
 };
 
 export function Avatar(props) {
-  const readyPlayerMeModel = useGLTF("https://models.readyplayer.me/675f06a460c6e591da95393d.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
+  const readyPlayerMeModel = useGLTF("https://models.readyplayer.me/682b1756bdbf61e0fa794bc1.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
   const { nodes, materials, scene } = readyPlayerMeModel;
   const { message, onMessagePlayed, chat } = useChat();
   
