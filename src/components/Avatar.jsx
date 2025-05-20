@@ -135,6 +135,22 @@ export function Avatar(props) {
     }
   });
 
+  const getVoice = () => {
+    const voices = window.speechSynthesis.getVoices();
+    // Strictly look for male voices, prioritizing specific ones
+    return voices.find(
+      voice => 
+        (voice.name.includes('Male') || // Notice capital M
+         voice.name.includes('male') ||
+         voice.name.includes('David') ||
+         voice.name.includes('Google UK English Male') || // Notice capital M
+         voice.name.includes('Microsoft David')) &&
+        !voice.name.includes('Female') && // Explicitly exclude female voices
+        !voice.name.includes('female') &&
+        voice.lang.includes('en')
+    ) || voices.find(voice => voice.name === 'Microsoft David') || voices[0]; // Fallback chain
+  };
+
   const speakText = (text) => {
     return new Promise((resolve, reject) => {
       // Cancel any ongoing speech
@@ -142,19 +158,11 @@ export function Avatar(props) {
         window.speechSynthesis.cancel();
       }
 
-      const voices = window.speechSynthesis.getVoices();
-      const selectedVoice = voices.find(
-        voice => 
-          voice.name.includes('Google US English') ||
-          voice.name.includes('Microsoft Zira') ||
-          voice.name.includes('David') ||
-          (voice.name.includes('male') && voice.lang.includes('en'))
-      ) || voices[0];
-
       const utterance = new SpeechSynthesisUtterance(text);
+      const selectedVoice = getVoice(); // Use the updated getVoice function
       utterance.voice = selectedVoice;
       utterance.rate = 1.0;
-      utterance.pitch = 1.0;
+      utterance.pitch = 0.9; // Slightly lower pitch for more masculine voice
       utterance.volume = 1.0;
 
       utterance.onstart = () => {
@@ -281,19 +289,6 @@ export function Avatar(props) {
       }
     };
   }, []);
-
-  // Add this function to handle voice selection
-  const getVoice = () => {
-    const voices = window.speechSynthesis.getVoices();
-    // Try to find a female English voice
-    return voices.find(
-      voice => 
-        (voice.name.includes('male') || 
-         voice.name.includes('David') ||
-         voice.name.includes('Google UK English male')) && 
-        voice.lang.includes('en')
-    ) || voices[0]; // Fallback to first available voice
-  };
 
   // Handle animation changes
   useEffect(() => {
