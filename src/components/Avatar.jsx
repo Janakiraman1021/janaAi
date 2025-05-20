@@ -290,7 +290,7 @@ export function Avatar(props) {
       voice => 
         (voice.name.includes('male') || 
          voice.name.includes('David') ||
-         voice.name.includes('Google UK English Female')) && 
+         voice.name.includes('Google UK English male')) && 
         voice.lang.includes('en')
     ) || voices[0]; // Fallback to first available voice
   };
