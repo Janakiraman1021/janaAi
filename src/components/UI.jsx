@@ -70,7 +70,7 @@ export const UI = ({ hidden, ...props }) => {
             className="font-bold text-lg sm:text-xl lg:text-2xl text-purple-800"
             style={{ fontSize: '90%' }}
           >
-          Jana AI - The Web3 AI Agent
+          Jana AI - The Living Portfolio
           </h1>
           <p className="text-xs sm:text-sm lg:text-base">An AI assistanf for Janakiraman</p>
         </div>

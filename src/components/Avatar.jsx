@@ -102,7 +102,7 @@ const corresponding = {
 };
 
 export function Avatar(props) {
-  const readyPlayerMeModel = useGLTF("https://models.readyplayer.me/682b1756bdbf61e0fa794bc1.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
+  const readyPlayerMeModel = useGLTF("https://models.readyplayer.me/682b5c860e67beca037c2d9f.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
   const { nodes, materials, scene } = readyPlayerMeModel;
   const { message, onMessagePlayed, chat } = useChat();
   
@@ -147,8 +147,8 @@ export function Avatar(props) {
         voice => 
           voice.name.includes('Google US English') ||
           voice.name.includes('Microsoft Zira') ||
-          voice.name.includes('Samantha') ||
-          (voice.name.includes('Female') && voice.lang.includes('en'))
+          voice.name.includes('David') ||
+          (voice.name.includes('male') && voice.lang.includes('en'))
       ) || voices[0];
 
       const utterance = new SpeechSynthesisUtterance(text);
@@ -288,8 +288,8 @@ export function Avatar(props) {
     // Try to find a female English voice
     return voices.find(
       voice => 
-        (voice.name.includes('Female') || 
-         voice.name.includes('Samantha') ||
+        (voice.name.includes('male') || 
+         voice.name.includes('David') ||
          voice.name.includes('Google UK English Female')) && 
         voice.lang.includes('en')
     ) || voices[0]; // Fallback to first available voice
