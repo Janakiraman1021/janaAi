@@ -102,7 +102,7 @@ const corresponding = {
 };
 
 export function Avatar(props) {
-  const readyPlayerMeModel = useGLTF("https://models.readyplayer.me/682b5c860e67beca037c2d9f.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
+  const readyPlayerMeModel = useGLTF("https://models.readyplayer.me/682c46ac2fd4943835f7608b.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
   const { nodes, materials, scene } = readyPlayerMeModel;
   const { message, onMessagePlayed, chat } = useChat();
   
@@ -412,4 +412,4 @@ export function Avatar(props) {
 }
 
 useGLTF.preload("/models/animations.glb");
-useGLTF.preload("https://models.readyplayer.me/675f06a460c6e591da95393d.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
+useGLTF.preload("https://models.readyplayer.me/682c46ac2fd4943835f7608b.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
