@@ -6,6 +6,23 @@ import * as THREE from "three";
 import { useChat } from "../hooks/useChat";
 import { useSpeechSynthesis } from 'react-speech-kit';
 
+// Update the voice configuration constants
+const VOICE_CONFIG = {
+  PREFERRED_VOICES: [
+    'Microsoft Zira',
+    'Google US English Female',
+    'Samantha',
+    'Karen'
+  ],
+  DEFAULT_LANG: 'en-US'
+};
+
+const VOICE_SETTINGS = {
+  PITCH_MALE: 0.3,  // Very low pitch
+  RATE_MALE: 1,  // Slightly slower
+  PREFERRED_LANGS: ['en-US', 'en-GB', 'en-AU'],
+};
+
 const facialExpressions = {
   default: {},
   smile: {
@@ -102,7 +119,7 @@ const corresponding = {
 };
 
 export function Avatar(props) {
-  const readyPlayerMeModel = useGLTF("https://models.readyplayer.me/682c46ac2fd4943835f7608b.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
+  const readyPlayerMeModel = useGLTF("https://models.readyplayer.me/6830b5e341bfeee7cc290dcb.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
   const { nodes, materials, scene } = readyPlayerMeModel;
   const { message, onMessagePlayed, chat } = useChat();
   
@@ -135,20 +152,53 @@ export function Avatar(props) {
     }
   });
 
+  // Replace the existing getVoice function with this simpler version
   const getVoice = () => {
     const voices = window.speechSynthesis.getVoices();
-    // Strictly look for male voices, prioritizing specific ones
-    return voices.find(
-      voice => 
-        (voice.name.includes('Male') || // Notice capital M
-         voice.name.includes('male') ||
-         voice.name.includes('David') ||
-         voice.name.includes('Google UK English Male') || // Notice capital M
-         voice.name.includes('Microsoft David')) &&
-        !voice.name.includes('Female') && // Explicitly exclude female voices
-        !voice.name.includes('female') &&
-        voice.lang.includes('en')
-    ) || voices.find(voice => voice.name === 'Microsoft David') || voices[0]; // Fallback chain
+    console.log('Available voices:', voices.map(voice => voice.name));
+    
+    // Try to find a female voice
+    const femaleVoice = voices.find(voice => 
+      VOICE_CONFIG.PREFERRED_VOICES.includes(voice.name) || 
+      voice.name.toLowerCase().includes('female') ||
+      voice.name.includes('Zira')
+    );
+    
+    console.log('Selected voice:', femaleVoice?.name);
+    return femaleVoice || voices[0];
+  };
+
+  // Update the speech synthesis initialization
+  const initializeSpeech = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    const selectedVoice = getVoice();
+    
+    utterance.voice = selectedVoice;
+    utterance.lang = VOICE_CONFIG.DEFAULT_LANG;
+    utterance.rate = 0.9;
+    utterance.pitch = 0.7; // Lower pitch to ensure masculine sound
+    utterance.volume = 1.0;
+
+    // Force cancel any existing speech
+    window.speechSynthesis.cancel();
+
+    return utterance;
+  };
+
+  // Update the setupSpeech function
+  const setupSpeech = (utterance) => {
+    const selectedVoice = getVoice();
+    utterance.voice = selectedVoice;
+    utterance.rate = 1.0;
+    utterance.pitch = 1.5; // Higher pitch for female voice
+    utterance.volume = 1.0;
+    utterance.lang = 'en-US';
+    
+    console.log('Speech configuration:', {
+      voice: selectedVoice?.name,
+      lang: utterance.lang,
+      pitch: utterance.pitch
+    });
   };
 
   const speakText = (text) => {
@@ -159,11 +209,7 @@ export function Avatar(props) {
       }
 
       const utterance = new SpeechSynthesisUtterance(text);
-      const selectedVoice = getVoice(); // Use the updated getVoice function
-      utterance.voice = selectedVoice;
-      utterance.rate = 1.0;
-      utterance.pitch = 0.9; // Slightly lower pitch for more masculine voice
-      utterance.volume = 1.0;
+      setupSpeech(utterance); // Use the updated setupSpeech function
 
       utterance.onstart = () => {
         setSpeaking(true);
@@ -407,4 +453,4 @@ export function Avatar(props) {
 }
 
 useGLTF.preload("/models/animations.glb");
-useGLTF.preload("https://models.readyplayer.me/682c46ac2fd4943835f7608b.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");
+useGLTF.preload("https://models.readyplayer.me/6830b5e341bfeee7cc290dcb.glb?morphTargets=ARKit,Oculus+Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&textureSizeLimit=1024&textureFormat=png");

@@ -4,9 +4,9 @@
   "description": "A React project",
   "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "html-webpack-plugin": "^5.5.0",
     "react-refresh": "^0.16.0",
