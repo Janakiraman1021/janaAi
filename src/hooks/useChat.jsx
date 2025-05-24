@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const backendUrl = "https://jana-ai-bc-qxg4.vercel.app/chat";
+const backendUrl = "http://localhost:5000/chat";
 
 const ChatContext = createContext();
 
