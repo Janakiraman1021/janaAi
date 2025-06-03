@@ -5,6 +5,7 @@ import { Canvas } from '@react-three/fiber';
 import { Leva } from 'leva';
 import { Experience } from './components/Experience';
 import { UI } from './components/UI';
+import { useCyberpunkBackground  } from './useCyberpunkBackground';
 
 
 // AI Agent Component
@@ -20,7 +21,7 @@ function AIAgent() {
       console.log('User not found..!');
     }
   }, []);
-
+  useCyberpunkBackground();
   return (
     <>
       <Loader />
