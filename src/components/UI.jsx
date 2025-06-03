@@ -63,7 +63,7 @@ export const UI = ({ hidden, ...props }) => {
     <div className="overflow-hidden min-h-screen">
       <div className="fixed top-0 left-0 right-0 bottom-0 z-10 flex justify-between p-4 flex-col pointer-events-none">
         <div
-          className="self-start backdrop-blur-md  bg-opacity-50 p-3 sm:p-4 rounded-lg max-w-full sm:max-w-md"
+          className="self-start backdrop-blur-md bg-white  bg-opacity-50 p-3 sm:p-4 rounded-lg max-w-full sm:max-w-md"
           style={{ padding: '10px' }}
         >
           <h1
@@ -158,7 +158,7 @@ export const UI = ({ hidden, ...props }) => {
               </g>
             </svg>
           </button>
-          <style jsx>{`
+          <style>{`
             #btn:hover .svg-path {
               stroke: white;
             }
