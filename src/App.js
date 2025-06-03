@@ -8,6 +8,8 @@ import { UI } from './components/UI';
 import { useCyberpunkBackground } from './useCyberpunkBackground';
 import { ChatProvider, useChat } from './hooks/useChat';
 import { v4 as uuidv4 } from 'uuid';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 // Modern ChatViewer Component with draggable link previews
@@ -95,25 +97,46 @@ function StoredChatViewer() {
 
   // Clear chat history
   const clearChat = () => {
-    // Show confirmation dialog
-    if (window.confirm("Are you sure you want to clear the chat history?")) {
-      localStorage.removeItem('userQueries');
-      localStorage.removeItem('htmlResponses');
-      localStorage.removeItem('chatHistory');
-      localStorage.removeItem('lastHtmlResponse');
-      localStorage.removeItem('lastUserQuery');
-      localStorage.removeItem('lastAiMessages');
-      localStorage.removeItem('aiMessages');
-      
-      // Generate a new conversation ID
-      const newConversationId = uuidv4();
-      localStorage.setItem('currentConversationId', newConversationId);
-      setConversationId(newConversationId);
-      
-      // Clear the local state
-      setChatHistory([]);
-      setHtmlResponses([]);
-    }
+    toast.info('Are you sure you want to clear the chat history?If yes Click Here', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      closeButton: false,
+      onClick: () => {
+        localStorage.removeItem('userQueries');
+        localStorage.removeItem('htmlResponses');
+        localStorage.removeItem('chatHistory');
+        localStorage.removeItem('lastHtmlResponse');
+        localStorage.removeItem('lastUserQuery');
+        localStorage.removeItem('lastAiMessages');
+        localStorage.removeItem('aiMessages');
+        
+        // Generate a new conversation ID
+        const newConversationId = uuidv4();
+        localStorage.setItem('currentConversationId', newConversationId);
+        setConversationId(newConversationId);
+        
+        // Clear the local state
+        setChatHistory([]);
+        setHtmlResponses([]);
+        
+        toast.success('Chat history cleared successfully!', {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    });
   };
 
   // Initial load
@@ -519,6 +542,18 @@ function AIAgent() {
 function App() {
   return (
     <Router>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <Routes>
         <Route path="/" element={<AIAgent />} />
       </Routes>
