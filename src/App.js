@@ -18,6 +18,7 @@ function StoredChatViewer() {
   const [htmlResponses, setHtmlResponses] = useState([]);
   const [conversationId, setConversationId] = useState('');
   const [previewLink, setPreviewLink] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const chatViewerRef = useRef(null);
   const linkPreviewRef = useRef(null);
   const { chat, loading, message } = useChat();
@@ -97,46 +98,27 @@ function StoredChatViewer() {
 
   // Clear chat history
   const clearChat = () => {
-    toast.info('Are you sure you want to clear the chat history?If yes Click Here', {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      closeButton: false,
-      onClick: () => {
-        localStorage.removeItem('userQueries');
-        localStorage.removeItem('htmlResponses');
-        localStorage.removeItem('chatHistory');
-        localStorage.removeItem('lastHtmlResponse');
-        localStorage.removeItem('lastUserQuery');
-        localStorage.removeItem('lastAiMessages');
-        localStorage.removeItem('aiMessages');
-        
-        // Generate a new conversation ID
-        const newConversationId = uuidv4();
-        localStorage.setItem('currentConversationId', newConversationId);
-        setConversationId(newConversationId);
-        
-        // Clear the local state
-        setChatHistory([]);
-        setHtmlResponses([]);
-        
-        toast.success('Chat history cleared successfully!', {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      }
-    });
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmClear = () => {
+    localStorage.removeItem('userQueries');
+    localStorage.removeItem('htmlResponses');
+    localStorage.removeItem('chatHistory');
+    localStorage.removeItem('lastHtmlResponse');
+    localStorage.removeItem('lastUserQuery');
+    localStorage.removeItem('lastAiMessages');
+    localStorage.removeItem('aiMessages');
+    
+    // Generate a new conversation ID
+    const newConversationId = uuidv4();
+    localStorage.setItem('currentConversationId', newConversationId);
+    setConversationId(newConversationId);
+    
+    // Clear the local state
+    setChatHistory([]);
+    setHtmlResponses([]);
+    setShowConfirmModal(false);
   };
 
   // Initial load
@@ -258,240 +240,299 @@ function StoredChatViewer() {
   };
 
   return (
-    <div 
-      className={`
-        fixed top-20 left-8 z-40 transition-all duration-500 ease-in-out
-        ${isCollapsed ? 'w-16 h-16' : 'w-[90vw] sm:w-[400px] md:w-[500px] h-[80vh] sm:h-[600px]'}
-        transform hover:scale-105
-        backdrop-blur-lg
-        ${isHovered ? 'shadow-[0_0_30px_rgba(147,51,234,0.5)]' : 'shadow-[0_0_15px_rgba(147,51,234,0.3)]'}
-      `}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Cyberpunk-style header */}
+    <>
       <div 
         className={`
-          relative overflow-hidden
-          bg-gradient-to-r from-purple-900 via-pink-600 to-purple-900
-          ${isCollapsed ? 'rounded-full shadow-lg' : 'rounded-t-xl shadow-md'}
-          p-3 flex justify-between items-center cursor-pointer
-          border-b-2 border-purple-400/30
-          transition-all duration-300
+          fixed top-20 left-8 z-40 transition-all duration-500 ease-in-out
+          ${isCollapsed ? 'w-16 h-16' : 'w-[90vw] sm:w-[400px] md:w-[500px] h-[80vh] sm:h-[600px]'}
+          transform hover:scale-105
+          backdrop-blur-lg
+          ${isHovered ? 'shadow-[0_0_30px_rgba(147,51,234,0.5)]' : 'shadow-[0_0_15px_rgba(147,51,234,0.3)]'}
         `}
-        onClick={() => setIsCollapsed(!isCollapsed)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Animated background effect */}
-        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] animate-[gradient_8s_ease_infinite]" />
-        
-        {!isCollapsed && (
-          <>
-            <div className="relative z-10 flex items-center space-x-3">
-              <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.5)]" />
-              <h2 className="text-lg font-bold text-white font-mono tracking-wider">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
-                  Virtual Assitant
-                </span>
-              </h2>
+        {/* Cyberpunk-style header */}
+        <div 
+          className={`
+            relative overflow-hidden
+            bg-gradient-to-r from-purple-900 via-pink-600 to-purple-900
+            ${isCollapsed ? 'rounded-full shadow-lg' : 'rounded-t-xl shadow-md'}
+            p-3 flex justify-between items-center cursor-pointer
+            border-b-2 border-purple-400/30
+            transition-all duration-300
+          `}
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          {/* Animated background effect */}
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] animate-[gradient_8s_ease_infinite]" />
+          
+          {!isCollapsed && (
+            <>
+              <div className="relative z-10 flex items-center space-x-3">
+                <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.5)]" />
+                <h2 className="text-lg font-bold text-white tracking-wider cyberpunk-text">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 glow-text">
+                    Virtual Assistant
+                  </span>
+                </h2>
+              </div>
+              <div className="relative z-10 flex items-center space-x-2">
+                <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+                <button 
+                  className="text-white opacity-80 hover:opacity-100 transition-opacity duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsCollapsed(!isCollapsed);
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+            </>
+          )}
+          {isCollapsed && (
+            <div className="relative z-10 w-full h-full flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
             </div>
-            <div className="relative z-10 flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+          )}
+        </div>
+        
+        {/* Chat body */}
+        {!isCollapsed && (
+          <div className="
+            relative overflow-hidden
+            bg-gradient-to-b from-gray-900/95 to-purple-900/95
+            backdrop-blur-md rounded-b-xl p-4 flex flex-col h-[calc(100%-48px)]
+            shadow-xl border border-purple-800/30
+            transition-all duration-300
+          ">
+            {/* Animated background grid */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(147,51,234,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(147,51,234,0.1)_1px,transparent_1px)] bg-[size:20px_20px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,black,transparent)]" />
+            
+            {/* Top actions bar */}
+            <div className="relative z-10 flex justify-between items-center mb-3">
+              {conversationId && (
+                <div className="
+                  bg-purple-800/30 text-xs rounded-full px-3 py-1 text-purple-300 w-max
+                  border border-purple-500/20 backdrop-blur-sm
+                  animate-pulse
+                ">
+                  Chat #{conversationId.substring(0, 6)}
+                </div>
+              )}
+              
               <button 
-                className="text-white opacity-80 hover:opacity-100 transition-opacity duration-200"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setIsCollapsed(!isCollapsed);
+                  clearChat();
                 }}
+                className="
+                  text-xs bg-red-600/70 hover:bg-red-500 text-white px-3 py-1 rounded-full
+                  transition-all duration-200 hover:shadow-[0_0_10px_rgba(239,68,68,0.5)]
+                  border border-red-500/20
+                "
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                Clear Chat
               </button>
             </div>
-          </>
+            
+            {/* Chat messages */}
+            <div 
+              ref={chatViewerRef}
+              className="
+                relative z-10 flex-grow overflow-y-auto
+                scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-transparent
+                mb-4 px-2 space-y-4
+              "
+              onMouseOver={handleLinkHover}
+              onClick={handleLinkClick}
+            >
+              {chatHistory.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-purple-300 opacity-70 space-y-4">
+                  <div className="
+                    w-16 h-16 rounded-full bg-purple-800/30
+                    flex items-center justify-center
+                    border border-purple-500/20
+                    animate-pulse
+                  ">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                  </div>
+                  <p className="text-center cyberpunk-text">Start chatting with your virtual assistant...</p>
+                </div>
+              ) : (
+                chatHistory.map((msg, index) => (
+                  <div 
+                    key={index} 
+                    className={`
+                      message mb-4 transform transition-all duration-300
+                      ${msg.type === 'bot' ? 'bot-message' : 'user-message text-right'}
+                      hover:scale-[1.02]
+                    `}
+                  >
+                    {msg.type === 'user' ? (
+                      <div className="
+                        rounded-2xl rounded-tr-none bg-blue-600/70 p-3 max-w-[85%] inline-block
+                        shadow-md border border-blue-500/20
+                        backdrop-blur-sm
+                        animate-fade-in
+                      ">
+                        <p className="text-white font-mono">{msg.content}</p>
+                        <span className="block text-xs mt-1 opacity-50 font-mono">
+                          {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="
+                        rounded-2xl rounded-tl-none bg-purple-600/70 p-3 max-w-[85%] inline-block
+                        shadow-md border border-purple-500/20
+                        backdrop-blur-sm
+                        animate-fade-in
+                      ">
+                        <div 
+                          className="bot-content text-sm font-mono"
+                          dangerouslySetInnerHTML={{ __html: processHtmlContent(msg.content) }} 
+                        />
+                        <span className="block text-xs mt-1 opacity-50 font-mono">
+                          {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+            
+            {/* Small notice at bottom */}
+            <div className="relative z-10 text-xs text-center text-purple-400/60 mt-2 font-mono">
+              <span className="animate-pulse">●</span> Responses updated automatically from storage
+            </div>
+          </div>
         )}
-        {isCollapsed && (
-          <div className="relative z-10 w-full h-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
+        
+        {/* Draggable Link preview popup */}
+        {previewLink && (
+          <div 
+            ref={linkPreviewRef}
+            className={`
+              fixed z-50 bg-gray-900/95 rounded-lg shadow-xl
+              border border-purple-500/50 overflow-hidden
+              w-[90vw] sm:w-[500px] h-[350px]
+              ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}
+              backdrop-blur-lg
+              transition-all duration-300
+            `}
+            style={{
+              left: `${Math.max(0, Math.min(previewLink.x, window.innerWidth - 500))}px`,
+              top: `${Math.max(0, Math.min(previewLink.y, window.innerHeight - 350))}px`
+            }}
+            onMouseDown={startDragging}
+          >
+            <div className="
+              preview-header bg-gradient-to-r from-purple-800 to-blue-800
+              p-2 text-xs text-white flex justify-between items-center
+              border-b border-purple-500/30
+            ">
+              <div className="flex items-center space-x-2 flex-grow">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+                <span className="truncate max-w-[380px] font-mono">{previewLink.url}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button 
+                  className="hover:bg-blue-700 p-1 rounded transition-colors duration-200"
+                  onClick={() => window.open(previewLink.url, '_blank')}
+                  title="Open in new tab"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </button>
+                <button 
+                  className="hover:bg-red-700 p-1 rounded transition-colors duration-200"
+                  onClick={() => setPreviewLink(null)}
+                  title="Close preview"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <iframe 
+              src={previewLink.url} 
+              className="w-full h-[calc(100%-32px)]" 
+              title="Link Preview"
+              sandbox="allow-scripts allow-same-origin"
+            />
           </div>
         )}
       </div>
-      
-      {/* Chat body */}
-      {!isCollapsed && (
-        <div className="
-          relative overflow-hidden
-          bg-gradient-to-b from-gray-900/95 to-purple-900/95
-          backdrop-blur-md rounded-b-xl p-4 flex flex-col h-[calc(100%-48px)]
-          shadow-xl border border-purple-800/30
-          transition-all duration-300
-        ">
-          {/* Animated background grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(147,51,234,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(147,51,234,0.1)_1px,transparent_1px)] bg-[size:20px_20px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,black,transparent)]" />
-          
-          {/* Top actions bar */}
-          <div className="relative z-10 flex justify-between items-center mb-3">
-            {conversationId && (
-              <div className="
-                bg-purple-800/30 text-xs rounded-full px-3 py-1 text-purple-300 w-max
-                border border-purple-500/20 backdrop-blur-sm
-                animate-pulse
-              ">
-                Chat #{conversationId.substring(0, 6)}
-              </div>
-            )}
+
+      {/* Custom Cyberpunk Modal */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="relative w-[90vw] max-w-md transform overflow-hidden rounded-lg bg-gradient-to-br from-gray-900 to-purple-900 p-6 shadow-2xl transition-all">
+            {/* Animated border */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 opacity-20 animate-gradient"></div>
             
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                clearChat();
-              }}
-              className="
-                text-xs bg-red-600/70 hover:bg-red-500 text-white px-3 py-1 rounded-full
-                transition-all duration-200 hover:shadow-[0_0_10px_rgba(239,68,68,0.5)]
-                border border-red-500/20
-              "
-            >
-              Clear Chat
-            </button>
-          </div>
-          
-          {/* Chat messages */}
-          <div 
-            ref={chatViewerRef}
-            className="
-              relative z-10 flex-grow overflow-y-auto
-              scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-transparent
-              mb-4 px-2 space-y-4
-            "
-            onMouseOver={handleLinkHover}
-            onClick={handleLinkClick}
-          >
-            {chatHistory.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-purple-300 opacity-70 space-y-4">
-                <div className="
-                  w-16 h-16 rounded-full bg-purple-800/30
-                  flex items-center justify-center
-                  border border-purple-500/20
-                  animate-pulse
-                ">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </div>
-                <p className="text-center font-mono">Start chatting with your virtual Assitant...</p>
-              </div>
-            ) : (
-              chatHistory.map((msg, index) => (
-                <div 
-                  key={index} 
-                  className={`
-                    message mb-4 transform transition-all duration-300
-                    ${msg.type === 'bot' ? 'bot-message' : 'user-message text-right'}
-                    hover:scale-[1.02]
-                  `}
+            {/* Modal content */}
+            <div className="relative z-10">
+              {/* Header */}
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 cyberpunk-text">
+                  Clear Chat History
+                </h3>
+                <button 
+                  onClick={() => setShowConfirmModal(false)}
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
-                  {msg.type === 'user' ? (
-                    <div className="
-                      rounded-2xl rounded-tr-none bg-blue-600/70 p-3 max-w-[85%] inline-block
-                      shadow-md border border-blue-500/20
-                      backdrop-blur-sm
-                      animate-fade-in
-                    ">
-                      <p className="text-white font-mono">{msg.content}</p>
-                      <span className="block text-xs mt-1 opacity-50 font-mono">
-                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="
-                      rounded-2xl rounded-tl-none bg-purple-600/70 p-3 max-w-[85%] inline-block
-                      shadow-md border border-purple-500/20
-                      backdrop-blur-sm
-                      animate-fade-in
-                    ">
-                      <div 
-                        className="bot-content text-sm font-mono"
-                        dangerouslySetInnerHTML={{ __html: processHtmlContent(msg.content) }} 
-                      />
-                      <span className="block text-xs mt-1 opacity-50 font-mono">
-                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-          
-          {/* Small notice at bottom */}
-          <div className="relative z-10 text-xs text-center text-purple-400/60 mt-2 font-mono">
-            <span className="animate-pulse">●</span> Responses updated automatically from storage
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Message */}
+              <p className="mb-6 text-gray-300 cyberpunk-text">
+                Are you sure you want to clear all chat history? This action cannot be undone.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmClear}
+                  className="group relative px-4 py-2 text-sm font-medium text-white"
+                >
+                  <span className="relative z-10">Clear Chat</span>
+                  <div className="absolute inset-0 rounded-md bg-gradient-to-r from-red-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute inset-0 rounded-md bg-gradient-to-r from-red-600 to-pink-600"></div>
+                </button>
+              </div>
+            </div>
+
+            {/* Glowing corners */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-purple-500"></div>
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-purple-500"></div>
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-purple-500"></div>
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-purple-500"></div>
           </div>
         </div>
       )}
-      
-      {/* Draggable Link preview popup */}
-      {previewLink && (
-        <div 
-          ref={linkPreviewRef}
-          className={`
-            fixed z-50 bg-gray-900/95 rounded-lg shadow-xl
-            border border-purple-500/50 overflow-hidden
-            w-[90vw] sm:w-[500px] h-[350px]
-            ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}
-            backdrop-blur-lg
-            transition-all duration-300
-          `}
-          style={{
-            left: `${Math.max(0, Math.min(previewLink.x, window.innerWidth - 500))}px`,
-            top: `${Math.max(0, Math.min(previewLink.y, window.innerHeight - 350))}px`
-          }}
-          onMouseDown={startDragging}
-        >
-          <div className="
-            preview-header bg-gradient-to-r from-purple-800 to-blue-800
-            p-2 text-xs text-white flex justify-between items-center
-            border-b border-purple-500/30
-          ">
-            <div className="flex items-center space-x-2 flex-grow">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-              </svg>
-              <span className="truncate max-w-[380px] font-mono">{previewLink.url}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <button 
-                className="hover:bg-blue-700 p-1 rounded transition-colors duration-200"
-                onClick={() => window.open(previewLink.url, '_blank')}
-                title="Open in new tab"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </button>
-              <button 
-                className="hover:bg-red-700 p-1 rounded transition-colors duration-200"
-                onClick={() => setPreviewLink(null)}
-                title="Close preview"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <iframe 
-            src={previewLink.url} 
-            className="w-full h-[calc(100%-32px)]" 
-            title="Link Preview"
-            sandbox="allow-scripts allow-same-origin"
-          />
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 

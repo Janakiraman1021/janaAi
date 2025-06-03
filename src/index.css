@@ -3,6 +3,27 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Acquire';
+  src: url('./fonts/AquireBold-8Ma60.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Acquire';
+  src: url('./fonts/AquireBold-8Ma60.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Acquire';
+  src: url('./fonts/AquireBold-8Ma60.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
 :root {
   --leva-sizes-rootWidth: 340px;
   /* Cyberpunk color variables */
@@ -12,6 +33,7 @@
   --neon-green: #00ff41;
   --neon-orange: #ff4000;
   --dark-bg: #0a0a0f;
+  --font-acquire: 'Acquire', sans-serif;
 }
 
 #root {
@@ -26,7 +48,12 @@ body {
   overflow: hidden;
   position: relative;
   background: var(--dark-bg);
-  font-family: 'Orbitron', 'Maiden Orange', Arial, sans-serif;
+  font-family: var(--font-acquire);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #000;
+  color: #fff;
 }
 
 h1, h2, h3, h4, h5, h6, #btn {
@@ -256,5 +283,46 @@ body.greenScreen .cyberpunk-circuits {
 @media (max-width: 480px) {
   .cyberpunk-particles {
     display: none; /* Hide particles on very small screens for performance */
+  }
+}
+
+/* Update the modal and chat styles to use Acquire font */
+.modal-title {
+  font-family: var(--font-acquire);
+  font-weight: bold;
+}
+
+.chat-title {
+  font-family: var(--font-acquire);
+  font-weight: bold;
+}
+
+.chat-message {
+  font-family: var(--font-acquire);
+  font-weight: normal;
+}
+
+/* Add some cyberpunk text effects */
+.cyberpunk-text {
+  text-shadow: 0 0 10px rgba(147, 51, 234, 0.5),
+               0 0 20px rgba(147, 51, 234, 0.3),
+               0 0 30px rgba(147, 51, 234, 0.2);
+}
+
+/* Glowing text effect */
+.glow-text {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px rgba(147, 51, 234, 0.5),
+                 0 0 20px rgba(147, 51, 234, 0.3),
+                 0 0 30px rgba(147, 51, 234, 0.2);
+  }
+  to {
+    text-shadow: 0 0 20px rgba(147, 51, 234, 0.6),
+                 0 0 30px rgba(147, 51, 234, 0.4),
+                 0 0 40px rgba(147, 51, 234, 0.3);
   }
 }
