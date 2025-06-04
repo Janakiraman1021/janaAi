@@ -167,7 +167,7 @@ body::after {
 
 /* GREEN SCREEN MODE - OVERRIDE EVERYTHING */
 body.greenScreen {
-  background-color: #00ff00 !important;
+  background-color: #a5b1a5 !important;
   background-image: none !important;
 }
 

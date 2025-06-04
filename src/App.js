@@ -241,7 +241,7 @@ function StoredChatViewer() {
 
   return (
     <>
-    <useCyberpunkBackground >
+    
       <div 
         className={`
           fixed top-20 left-8 z-40 transition-all duration-500 ease-in-out
@@ -533,7 +533,7 @@ function StoredChatViewer() {
           </div>
         </div>
       )}
-      </useCyberpunkBackground>
+      
     </>
   );
 }
@@ -599,9 +599,7 @@ function App() {
       />
       
       <Routes>
-      <useCyberpunkBackground>
         <Route path="/" element={<AIAgent />} />
-        </useCyberpunkBackground>
       </Routes>
     </Router>
   );
