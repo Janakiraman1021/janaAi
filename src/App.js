@@ -28,7 +28,7 @@ function StoredChatViewer() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   
   // Show/hide the chat widget
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
 
   // Function to load data from localStorage
