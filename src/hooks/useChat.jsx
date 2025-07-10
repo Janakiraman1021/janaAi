@@ -22,7 +22,7 @@ export const ChatProvider = ({ children }) => {
       try {
         // We won't directly set messages here, as our queue system works differently
         // But we'll log that we found existing messages
-        console.log("Found stored chat history:", JSON.parse(storedChatHistory));
+        // console.log("Found stored chat history:", JSON.parse(storedChatHistory));
       } catch (e) {
         console.error("Error parsing stored chat history:", e);
       }
